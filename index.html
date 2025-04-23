@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منشئ بطاقة المنتج</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            text-align: right;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-direction: row-reverse;
+        }
+        .customizer-panel {
+            flex: 1;
+            min-width: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .preview-panel {
+            flex: 1;
+            min-width: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: right;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-direction: row-reverse;
+        }
+        .checkbox-group input {
+            width: auto;
+        }
+        .image-upload {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            flex-direction: row-reverse;
+        }
+        .image-preview img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .image-preview .img-container {
+            position: relative;
+        }
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-direction: row-reverse;
+        }
+        .copy-btn {
+            background-color: #2ecc71;
+        }
+        .copy-btn:hover {
+            background-color: #27ae60;
+        }
+        .product-card {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            margin: 0 auto;
+            text-align: right;
+        }
+        .product-images {
+            position: relative;
+            height: 300px;
+        }
+        .product-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .badges {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            flex-direction: row-reverse;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .badge.best-seller {
+            background-color: #e67e22;
+        }
+        .badge.discount {
+            background-color: #e74c3c;
+        }
+        .badge.sold-out {
+            background-color: #7f8c8d;
+        }
+        .product-info {
+            padding: 15px;
+        }
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-direction: row-reverse;
+        }
+        .current-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .old-price {
+            font-size: 16px;
+            color: #95a5a6;
+            text-decoration: line-through;
+        }
+        .discount {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .category {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        .code-output {
+            width: 100%;
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border: 1px solid #ddd;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: right;
+            direction: ltr;
+        }
+        .auto-discount {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .upload-status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            flex-direction: row-reverse;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: #ecf0f1;
+            border: none;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .size-section {
+            margin-bottom: 15px;
+        }
+        .size-section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .size-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            flex-direction: row-reverse;
+        }
+        .size-option {
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+        }
+        .size-option input {
+            margin-right: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>منشئ بطاقة المنتج</h1>
+    
+    <div class="container">
+        <div class="customizer-panel">
+            <h2>تفاصيل المنتج</h2>
+            
+            <div class="form-group">
+                <label for="product-type">نوع المنتج</label>
+                <select id="product-type">
+                    <option value="m">رجالي</option>
+                    <option value="w">نسائي</option>
+                    <option value="c">أطفال</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="product-number">رقم المنتج</label>
+                <input type="number" id="product-number" value="1" min="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="product-name">اسم المنتج</label>
+                <input type="text" id="product-name" value="المنتج 1">
+            </div>
+            
+            <div class="form-group">
+                <label for="product-details">تفاصيل المنتج</label>
+                <textarea id="product-details" rows="2">تيشيرت رجالي قطني عالي الجودة</textarea>
+            </div>
+            
+            <h2>التسعير</h2>
+            
+            <div class="form-group">
+                <label for="product-price">السعر الحالي</label>
+                <input type="number" id="product-price" value="180">
+            </div>
+            
+            <div class="form-group">
+                <label for="product-old-price">السعر القديم (اختياري)</label>
+                <input type="number" id="product-old-price" value="220">
+                <div class="auto-discount" id="discount-calculator">
+                    سيتم حساب الخصم تلقائياً
+                </div>
+            </div>
+            
+            <h2>الصور</h2>
+            <div class="upload-status" id="upload-status">قم برفع الصور أو إضافة روابط الصور</div>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="upload-tab">رفع</button>
+                <button class="tab-btn" data-tab="url-tab">روابط</button>
+            </div>
+            
+            <div class="tab-content active" id="upload-tab">
+                <div class="form-group">
+                    <label>رفع صور المنتج</label>
+                    <div class="image-upload">
+                        <input type="file" id="file-upload" multiple accept="image/*">
+                        <p>انقر لاختيار الصور</p>
+                    </div>
+                    <div class="image-preview" id="upload-preview"></div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="url-tab">
+                <div class="form-group">
+                    <label>روابط الصور (سطر واحد لكل صورة)</label>
+                    <textarea id="image-urls" rows="4">https://i.postimg.cc/L51zBCvF/IMG-20250423-WA0007.jpg</textarea>
+                </div>
+            </div>
+            
+            <h2>المقاسات</h2>
+            
+            <!-- Standard Sizes (for men/women) -->
+            <div class="size-section" id="standard-sizes-section">
+                <div class="size-section-title">المقاسات القياسية:</div>
+                <div class="size-options">
+                    <div class="size-option">
+                        <input type="checkbox" id="size-xs" class="standard-size">
+                        <label for="size-xs">XS</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-s" class="standard-size" checked>
+                        <label for="size-s">S</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-m" class="standard-size" checked>
+                        <label for="size-m">M</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-l" class="standard-size" checked>
+                        <label for="size-l">L</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-xl" class="standard-size" checked>
+                        <label for="size-xl">XL</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-xxl" class="standard-size">
+                        <label for="size-xxl">XXL</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-xxxl" class="standard-size">
+                        <label for="size-xxxl">XXXL</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Numeric Sizes (for men/women) -->
+            <div class="size-section" id="numeric-sizes-section">
+                <div class="size-section-title">المقاسات الرقمية:</div>
+                <div class="size-options">
+                    <div class="size-option">
+                        <input type="checkbox" id="size-1" class="numeric-size">
+                        <label for="size-1">1</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-2" class="numeric-size">
+                        <label for="size-2">2</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-3" class="numeric-size">
+                        <label for="size-3">3</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-4" class="numeric-size">
+                        <label for="size-4">4</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-5" class="numeric-size">
+                        <label for="size-5">5</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-6" class="numeric-size">
+                        <label for="size-6">6</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-7" class="numeric-size">
+                        <label for="size-7">7</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-8" class="numeric-size">
+                        <label for="size-8">8</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-9" class="numeric-size">
+                        <label for="size-9">9</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-10" class="numeric-size">
+                        <label for="size-10">10</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-11" class="numeric-size">
+                        <label for="size-11">11</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-12" class="numeric-size">
+                        <label for="size-12">12</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-13" class="numeric-size">
+                        <label for="size-13">13</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-14" class="numeric-size">
+                        <label for="size-14">14</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-15" class="numeric-size">
+                        <label for="size-15">15</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-16" class="numeric-size">
+                        <label for="size-16">16</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-17" class="numeric-size">
+                        <label for="size-17">17</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-18" class="numeric-size">
+                        <label for="size-18">18</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-19" class="numeric-size">
+                        <label for="size-19">19</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="size-20" class="numeric-size">
+                        <label for="size-20">20</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Age Sizes (for kids only) -->
+            <div class="size-section hidden" id="age-sizes-section">
+                <div class="size-section-title">الأعمار (للأطفال):</div>
+                <div class="size-options">
+                    <div class="size-option">
+                        <input type="checkbox" id="age-1" class="age-size">
+                        <label for="age-1">1 سنة</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-2" class="age-size">
+                        <label for="age-2">2 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-3" class="age-size">
+                        <label for="age-3">3 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-4" class="age-size">
+                        <label for="age-4">4 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-5" class="age-size">
+                        <label for="age-5">5 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-6" class="age-size">
+                        <label for="age-6">6 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-7" class="age-size">
+                        <label for="age-7">7 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-8" class="age-size">
+                        <label for="age-8">8 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-9" class="age-size">
+                        <label for="age-9">9 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-10" class="age-size">
+                        <label for="age-10">10 سنوات</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-11" class="age-size">
+                        <label for="age-11">11 سنة</label>
+                    </div>
+                    <div class="size-option">
+                        <input type="checkbox" id="age-12" class="age-size">
+                        <label for="age-12">12 سنة</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>علامات</h2>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="is-best-seller" checked>
+                <label for="is-best-seller">الأكثر مبيعاً</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="has-offer" checked>
+                <label for="has-offer">يوجد عرض</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="sold-out">
+                <label for="sold-out">نفذ من المخزن</label>
+            </div>
+            
+            <button id="update-btn">تحديث المعاينة</button>
+        </div>
+        
+        <div class="preview-panel">
+            <h2>معاينة مباشرة</h2>
+            <div id="product-preview">
+                <!-- Preview will be auto-generated here -->
+            </div>
+            
+            <h2>الكود المولد</h2>
+            <div class="code-output" id="code-output">
+                سوف يظهر الكود المولد هنا
+            </div>
+            <div class="button-group">
+                <button id="copy-btn" class="copy-btn">نسخ الكود</button>
+                <button id="generate-btn">إنشاء بطاقة جديدة</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all form elements
+            const productType = document.getElementById('product-type');
+            const productNumber = document.getElementById('product-number');
+            const productName = document.getElementById('product-name');
+            const productDetails = document.getElementById('product-details');
+            const productPrice = document.getElementById('product-price');
+            const productOldPrice = document.getElementById('product-old-price');
+            const discountCalculator = document.getElementById('discount-calculator');
+            const uploadStatus = document.getElementById('upload-status');
+            const isBestSeller = document.getElementById('is-best-seller');
+            const hasOffer = document.getElementById('has-offer');
+            const soldOut = document.getElementById('sold-out');
+            const generateBtn = document.getElementById('generate-btn');
+            const updateBtn = document.getElementById('update-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const productPreview = document.getElementById('product-preview');
+            const codeOutput = document.getElementById('code-output');
+            const fileUpload = document.getElementById('file-upload');
+            const uploadPreview = document.getElementById('upload-preview');
+            const imageUrls = document.getElementById('image-urls');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // Size sections
+            const standardSizesSection = document.getElementById('standard-sizes-section');
+            const numericSizesSection = document.getElementById('numeric-sizes-section');
+            const ageSizesSection = document.getElementById('age-sizes-section');
+            
+            let uploadedImages = [];
+            let useUploadedImages = true;
+            
+            // Handle product type change to show/hide size sections
+            productType.addEventListener('change', function() {
+                const type = this.value;
+                
+                if (type === 'c') {
+                    // Kids - show age sizes, hide others
+                    standardSizesSection.classList.add('hidden');
+                    numericSizesSection.classList.add('hidden');
+                    ageSizesSection.classList.remove('hidden');
+                } else {
+                    // Men/Women - show standard and numeric sizes, hide age sizes
+                    standardSizesSection.classList.remove('hidden');
+                    numericSizesSection.classList.remove('hidden');
+                    ageSizesSection.classList.add('hidden');
+                }
+                
+                updatePreview();
+            });
+            
+            // Tab switching
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Update which images we're using
+                    useUploadedImages = tabId === 'upload-tab';
+                    updatePreview();
+                });
+            });
+            
+            // Calculate discount whenever prices change
+            function calculateDiscount() {
+                const price = parseFloat(productPrice.value) || 0;
+                const oldPrice = parseFloat(productOldPrice.value) || 0;
+                
+                if (oldPrice > price) {
+                    const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+                    discountCalculator.textContent = `خصم تلقائي: ${discount}% (${oldPrice} → ${price})`;
+                    hasOffer.checked = true;
+                } else {
+                    discountCalculator.textContent = 'لا يوجد خصم (يجب أن يكون السعر القديم أعلى من السعر الحالي)';
+                    hasOffer.checked = false;
+                }
+            }
+            
+            // Add event listeners for price changes
+            productPrice.addEventListener('input', calculateDiscount);
+            productOldPrice.addEventListener('input', calculateDiscount);
+            
+            // Handle file uploads
+            fileUpload.addEventListener('change', function(e) {
+                const files = e.target.files;
+                uploadPreview.innerHTML = '';
+                uploadedImages = [];
+                
+                if (files.length > 0) {
+                    uploadStatus.textContent = `${files.length} صورة تم رفعها`;
+                    uploadStatus.style.color = '#27ae60';
+                    
+                    Array.from(files).forEach((file, index) => {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            uploadedImages.push(e.target.result);
+                            
+                            // Create image preview with remove button
+                            const imgContainer = document.createElement('div');
+                            imgContainer.className = 'img-container';
+                            
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'remove-btn';
+                            removeBtn.innerHTML = '×';
+                            removeBtn.onclick = function() {
+                                imgContainer.remove();
+                                uploadedImages = uploadedImages.filter(img => img !== e.target.result);
+                                uploadStatus.textContent = `${uploadedImages.length} صورة تم رفعها`;
+                                if (uploadedImages.length === 0) {
+                                    uploadStatus.textContent = 'قم برفع الصور أو إضافة روابط الصور';
+                                    uploadStatus.style.color = '#7f8c8d';
+                                }
+                                updatePreview();
+                            };
+                            
+                            imgContainer.appendChild(img);
+                            imgContainer.appendChild(removeBtn);
+                            uploadPreview.appendChild(imgContainer);
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    });
+                } else {
+                    uploadStatus.textContent = 'قم برفع الصور أو إضافة روابط الصور';
+                    uploadStatus.style.color = '#7f8c8d';
+                }
+                
+                updatePreview();
+            });
+            
+            // Update image URLs when changed
+            imageUrls.addEventListener('input', updatePreview);
+            
+            // Get selected sizes based on product type
+            function getSelectedSizes() {
+                const type = productType.value;
+                const selectedSizes = [];
+                
+                if (type === 'c') {
+                    // Kids - get age sizes
+                    for (let i = 1; i <= 12; i++) {
+                        const checkbox = document.getElementById(`age-${i}`);
+                        if (checkbox && checkbox.checked) {
+                            selectedSizes.push(`${i} سنة`);
+                        }
+                    }
+                } else {
+                    // Men/Women - get standard and numeric sizes
+                    // Standard sizes
+                    const standardSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+                    standardSizes.forEach(size => {
+                        const checkbox = document.getElementById(`size-${size.toLowerCase()}`);
+                        if (checkbox && checkbox.checked) {
+                            selectedSizes.push(size);
+                        }
+                    });
+                    
+                    // Numeric sizes
+                    for (let i = 1; i <= 20; i++) {
+                        const checkbox = document.getElementById(`size-${i}`);
+                        if (checkbox && checkbox.checked) {
+                            selectedSizes.push(i.toString());
+                        }
+                    }
+                }
+                
+                return selectedSizes;
+            }
+            
+            // Update preview function
+            function updatePreview() {
+                // Get all values
+                const type = productType.value;
+                const number = productNumber.value;
+                const id = type + number;
+                const name = productName.value;
+                const details = productDetails.value;
+                const price = parseFloat(productPrice.value);
+                const oldPrice = productOldPrice.value ? parseFloat(productOldPrice.value) : null;
+                const images = useUploadedImages ? 
+                    (uploadedImages.length ? uploadedImages : []) : 
+                    imageUrls.value.split('\n').filter(url => url.trim() !== '');
+                const bestSeller = isBestSeller.checked;
+                const offer = hasOffer.checked;
+                const isSoldOut = soldOut.checked;
+                const selectedSizes = getSelectedSizes();
+                const sizesText = selectedSizes.length > 0 ? 
+                    `المقاسات: ${selectedSizes.join(', ')}` : 'لا توجد مقاسات محددة';
+                
+                // Calculate discount percentage if old price exists
+                let discountPercentage = '';
+                if (oldPrice && oldPrice > price) {
+                    const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+                    discountPercentage = discount + '% خصم';
+                }
+                
+                // Generate preview HTML
+                let previewHtml = `
+                    <div class="product-card" id="${id}">
+                        <div class="product-images">
+                            ${images.length > 0 ? `<img src="${images[0]}" alt="${name}">` : '<div style="background:#eee;height:100%;display:flex;align-items:center;justify-content:center;color:#95a5a6;">لا توجد صورة</div>'}
+                            <div class="badges">
+                                ${bestSeller ? '<span class="badge best-seller">الأكثر مبيعاً</span>' : ''}
+                                ${discountPercentage ? '<span class="badge discount">' + discountPercentage + '</span>' : ''}
+                                ${isSoldOut ? '<span class="badge sold-out">نفذ من المخزن</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">${name}</div>
+                            <div class="category">${type === 'm' ? 'رجالي' : type === 'w' ? 'نسائي' : 'أطفال'}</div>
+                            <div>${details}</div>
+                            <div class="price-container">
+                                <span class="current-price">${price.toFixed(2)} ر.س</span>
+                                ${oldPrice ? `<span class="old-price">${oldPrice.toFixed(2)} ر.س</span>` : ''}
+                            </div>
+                            <div>${sizesText}</div>
+                        </div>
+                    </div>
+                `;
+                
+                productPreview.innerHTML = previewHtml;
+                
+                // Generate the code output
+                const productData = {
+                    id: id,
+                    name: name,
+                    price: price,
+                    oldPrice: oldPrice || undefined,
+                    image: images.length ? images[0] : undefined,
+                    discount: discountPercentage || undefined,
+                    isBestSeller: bestSeller,
+                    hasOffer: offer,
+                    soldOut: isSoldOut,
+                    sizes: sizesText,
+                    details: details
+                };
+                
+                // Clean up undefined values
+                Object.keys(productData).forEach(key => {
+                    if (productData[key] === undefined) {
+                        delete productData[key];
+                    }
+                });
+                
+                // Format JSON with comma after closing brace
+                let jsonString = JSON.stringify(productData, null, 2);
+                jsonString = jsonString + ','; // Add comma after closing brace
+                
+                codeOutput.textContent = jsonString;
+            }
+            
+            // Copy code to clipboard
+            copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(codeOutput.textContent)
+                    .then(() => {
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = 'تم النسخ!';
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+            });
+            
+            // Generate new card (reset form)
+            generateBtn.addEventListener('click', function() {
+                productType.value = 'm';
+                productNumber.value = '1';
+                productName.value = '';
+                productDetails.value = '';
+                productPrice.value = '';
+                productOldPrice.value = '';
+                fileUpload.value = '';
+                imageUrls.value = '';
+                uploadedImages = [];
+                uploadPreview.innerHTML = '';
+                isBestSeller.checked = false;
+                hasOffer.checked = false;
+                soldOut.checked = false;
+                
+                // Reset all size checkboxes
+                document.querySelectorAll('.standard-size, .numeric-size, .age-size').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // Set default sizes
+                document.getElementById('size-s').checked = true;
+                document.getElementById('size-m').checked = true;
+                document.getElementById('size-l').checked = true;
+                document.getElementById('size-xl').checked = true;
+                
+                // Update size sections visibility
+                standardSizesSection.classList.remove('hidden');
+                numericSizesSection.classList.remove('hidden');
+                ageSizesSection.classList.add('hidden');
+                
+                uploadStatus.textContent = 'قم برفع الصور أو إضافة روابط الصور';
+                uploadStatus.style.color = '#7f8c8d';
+                
+                // Switch to first tab
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                tabButtons[0].classList.add('active');
+                tabContents[0].classList.add('active');
+                useUploadedImages = true;
+                
+                updatePreview();
+            });
+            
+            // Update preview when any input changes
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('input', updatePreview);
+            });
+            document.querySelectorAll('input[type="checkbox"]').forEach(element => {
+                element.addEventListener('change', updatePreview);
+            });
+            
+            // Initialize
+            calculateDiscount();
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
