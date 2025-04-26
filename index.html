@@ -2,13 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>منشئ بطاقة المنتج</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             background-color: #f5f5f5;
             color: #333;
             text-align: right;
@@ -16,44 +19,37 @@
         .container {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
-            max-width: 1400px;
+            gap: 15px;
+            width: 100%;
             margin: 0 auto;
             flex-direction: row-reverse;
         }
-        .customizer-panel {
+        .customizer-panel, .preview-panel {
             flex: 1;
-            min-width: 400px;
+            min-width: 300px;
             background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .preview-panel {
-            flex: 1;
-            min-width: 400px;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
         h1 {
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
         }
         h2 {
             color: #3498db;
             margin-top: 0;
+            font-size: 1.2rem;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 600;
         }
         input[type="text"],
@@ -61,40 +57,36 @@
         select,
         textarea {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 14px;
             text-align: right;
         }
         .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 12px;
             flex-direction: row-reverse;
-        }
-        .checkbox-group input {
-            width: auto;
         }
         .image-upload {
             border: 2px dashed #ccc;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             border-radius: 4px;
-            margin-bottom: 15px;
-            position: relative;
+            margin-bottom: 10px;
         }
         .image-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 10px;
             flex-direction: row-reverse;
         }
         .image-preview img {
-            width: 120px;
-            height: 120px;
+            width: 80px;
+            height: 80px;
             object-fit: cover;
             border-radius: 4px;
             border: 1px solid #ddd;
@@ -119,19 +111,14 @@
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 10px 15px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
             transition: background-color 0.3s;
         }
         button:hover {
             background-color: #2980b9;
-        }
-        button:disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
         }
         .button-group {
             display: flex;
@@ -146,23 +133,23 @@
             background-color: #27ae60;
         }
         .product-card {
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: relative;
-            margin: 0 auto;
-            text-align: right;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .product-images {
             position: relative;
-            height: 300px;
+            height: 200px;
+            background: #eee;
         }
         .product-images img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
         .badges {
             position: absolute;
@@ -192,24 +179,24 @@
             padding: 15px;
         }
         .product-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .price-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
             flex-direction: row-reverse;
         }
         .current-price {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #2c3e50;
         }
         .old-price {
-            font-size: 16px;
+            font-size: 14px;
             color: #95a5a6;
             text-decoration: line-through;
         }
@@ -218,47 +205,47 @@
             font-weight: bold;
         }
         .category {
-            font-size: 14px;
+            font-size: 13px;
             color: #7f8c8d;
             margin-bottom: 5px;
         }
         .code-output {
             width: 100%;
-            margin-top: 30px;
+            margin-top: 15px;
             background: #f8f9fa;
-            padding: 15px;
+            padding: 10px;
             border-radius: 4px;
             font-family: monospace;
             white-space: pre-wrap;
             border: 1px solid #ddd;
-            max-height: 300px;
+            max-height: 200px;
             overflow-y: auto;
-            text-align: right;
-            direction: ltr;
+            font-size: 12px;
         }
         .auto-discount {
             background-color: #f8f9fa;
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
             margin-top: 5px;
-            font-size: 14px;
+            font-size: 13px;
         }
         .upload-status {
-            margin-top: 10px;
-            font-size: 14px;
+            margin-top: 8px;
+            font-size: 13px;
             color: #7f8c8d;
         }
         .tab-buttons {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             flex-direction: row-reverse;
         }
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 8px;
             background: #ecf0f1;
             border: none;
             cursor: pointer;
+            font-size: 14px;
         }
         .tab-btn.active {
             background: #3498db;
@@ -271,29 +258,49 @@
             display: block;
         }
         .size-section {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .size-section-title {
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-size: 14px;
         }
         .size-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 8px;
             flex-direction: row-reverse;
         }
         .size-option {
             display: flex;
             align-items: center;
             flex-direction: row-reverse;
+            font-size: 13px;
         }
         .size-option input {
             margin-right: 5px;
         }
         .hidden {
             display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .customizer-panel, .preview-panel {
+                min-width: 100%;
+            }
+            .product-images {
+                height: 150px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .button-group button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -450,46 +457,6 @@
                         <input type="checkbox" id="size-10" class="numeric-size">
                         <label for="size-10">10</label>
                     </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-11" class="numeric-size">
-                        <label for="size-11">11</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-12" class="numeric-size">
-                        <label for="size-12">12</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-13" class="numeric-size">
-                        <label for="size-13">13</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-14" class="numeric-size">
-                        <label for="size-14">14</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-15" class="numeric-size">
-                        <label for="size-15">15</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-16" class="numeric-size">
-                        <label for="size-16">16</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-17" class="numeric-size">
-                        <label for="size-17">17</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-18" class="numeric-size">
-                        <label for="size-18">18</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-19" class="numeric-size">
-                        <label for="size-19">19</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="size-20" class="numeric-size">
-                        <label for="size-20">20</label>
-                    </div>
                 </div>
             </div>
             
@@ -536,14 +503,6 @@
                     <div class="size-option">
                         <input type="checkbox" id="age-10" class="age-size">
                         <label for="age-10">10 سنوات</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="age-11" class="age-size">
-                        <label for="age-11">11 سنة</label>
-                    </div>
-                    <div class="size-option">
-                        <input type="checkbox" id="age-12" class="age-size">
-                        <label for="age-12">12 سنة</label>
                     </div>
                 </div>
             </div>
@@ -736,7 +695,7 @@
                 
                 if (type === 'c') {
                     // Kids - get age sizes
-                    for (let i = 1; i <= 12; i++) {
+                    for (let i = 1; i <= 10; i++) {
                         const checkbox = document.getElementById(`age-${i}`);
                         if (checkbox && checkbox.checked) {
                             selectedSizes.push(`${i} سنة`);
@@ -754,7 +713,7 @@
                     });
                     
                     // Numeric sizes
-                    for (let i = 1; i <= 20; i++) {
+                    for (let i = 1; i <= 10; i++) {
                         const checkbox = document.getElementById(`size-${i}`);
                         if (checkbox && checkbox.checked) {
                             selectedSizes.push(i.toString());
